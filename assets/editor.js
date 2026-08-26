@@ -1,0 +1,5 @@
+const dialog=document.querySelector('#questionDialog'), answers=document.querySelector('#answers');
+function addAnswer(value='',correct=false){const i=answers.children.length;const row=document.createElement('div');row.className='answer-edit';row.innerHTML=`<input type="checkbox" name="correct[]" value="${i}" ${correct?'checked':''}><input name="answers[]" value="${String(value).replaceAll('"','&quot;')}" placeholder="Svar ${i+1}" required><button type="button" class="danger" onclick="this.parentElement.remove()">×</button>`;answers.append(row)}
+function openQuestion(){dialogTitle.textContent='Ny fråga';questionId.value='';questionText.value='';questionType.value='single';questionTime.value=20;questionPoints.value=1000;answers.innerHTML='';for(let i=0;i<4;i++)addAnswer();dialog.showModal()}
+function editQuestion(btn){const q=JSON.parse(btn.dataset.question);dialogTitle.textContent='Redigera fråga';questionId.value=q.id;questionText.value=q.text;questionType.value=q.type;questionTime.value=q.time_limit;questionPoints.value=q.points;answers.innerHTML='';q.answers.forEach(a=>addAnswer(a.text,+a.is_correct===1));dialog.showModal()}
+

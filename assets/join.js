@@ -1,0 +1,2 @@
+document.querySelector('#joinForm').addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(e.target),button=e.target.querySelector('button');button.disabled=true;const r=await fetch('api/join.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(f))});const data=await r.json();if(data.token)location.href='game.php?token='+data.token;else{button.disabled=false;alert(data.error||'Något gick fel.')}});
+
