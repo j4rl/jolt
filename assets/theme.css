@@ -1,0 +1,41 @@
+:root{color-scheme:light dark;--surface:#fff;--line:#d5cfc3;--soft:#e9e4da}
+nav div{align-items:center}
+ld-theme-toggle{flex:none}
+.file-drop{display:grid;place-items:center;gap:5px;margin:6px 0 22px;padding:26px 20px;border:2px dashed var(--line);border-radius:14px;background:color-mix(in srgb,var(--purple) 4%,var(--surface));text-align:center;cursor:pointer;transition:border-color .18s,background .18s,transform .18s}
+.file-drop:hover,.file-drop.is-dragging{border-color:var(--purple);background:color-mix(in srgb,var(--purple) 10%,var(--surface));transform:translateY(-1px)}
+.file-drop:focus-within{outline:3px solid color-mix(in srgb,var(--purple) 45%,transparent);outline-offset:2px}
+.file-drop input{position:absolute;width:1px;height:1px;margin:0;padding:0;opacity:0;pointer-events:none}
+.file-drop-icon{display:grid;place-items:center;width:42px;height:42px;margin-bottom:3px;border-radius:50%;background:var(--purple);color:#fff;font-size:25px;line-height:1}
+.file-drop strong{font-size:16px;overflow-wrap:anywhere}
+.file-drop>span:last-child{color:var(--muted);font-size:13px;font-weight:500}
+.file-drop.has-file{border-style:solid;border-color:var(--green);background:color-mix(in srgb,var(--green) 9%,var(--surface))}
+.file-drop.has-file .file-drop-icon{background:var(--green)}
+.file-drop.has-error{border-color:var(--coral);background:color-mix(in srgb,var(--coral) 9%,var(--surface))}
+.file-drop.has-error .file-drop-icon{background:var(--coral)}
+body[data-theme="dark"]{--ink:#f7f4ed;--paper:#15141b;--surface:#211f27;--line:#44404b;--soft:#302d37;--muted:#aaa6af;background:var(--paper);color:var(--ink)}
+body[data-theme="dark"] nav{border-color:#ffffff18}
+body[data-theme="dark"] .join-card,body[data-theme="dark"] .panel,body[data-theme="dark"] .quiz-card,body[data-theme="dark"] .question-row{background:var(--surface);border-color:var(--line);box-shadow:0 14px 50px #0003}
+body[data-theme="dark"] dialog{background:var(--surface);color:var(--ink)}
+body[data-theme="dark"] input,body[data-theme="dark"] textarea,body[data-theme="dark"] select{background:#18171d;color:var(--ink);border-color:var(--line)}
+body[data-theme="dark"] button,body[data-theme="dark"] .button{background:var(--purple);color:#fff;color:contrast-color(var(--purple))}
+body[data-theme="dark"] .secondary{background:var(--soft);color:var(--ink);color:contrast-color(var(--soft))}
+body[data-theme="dark"] .danger{background:#472724;color:#fff;color:contrast-color(#472724)}
+body[data-theme="dark"] .close{background:transparent;color:var(--ink)}
+body[data-theme="dark"] .tabs{border-color:var(--line)}
+body[data-theme="dark"] .tabs button{background:transparent;color:var(--muted)}
+body[data-theme="dark"] .tabs button.active{color:#a98cff}
+body[data-theme="dark"] .music-options span{border-color:var(--line)}
+body[data-theme="dark"] .music-options input:checked+span{background:#30274d}
+body[data-theme="dark"] .live-shell{--ink:#15141b;--surface:#211f27}
+@media(max-width:750px){nav{height:auto;min-height:76px;gap:14px}nav div{gap:12px;flex-wrap:wrap;justify-content:flex-end}nav div>a{font-size:14px}.file-drop{padding:22px 14px}}
+.preview-dialog{width:min(1100px,96vw);max-width:none;background:#141219;color:#fff}
+.preview-dialog::backdrop{background:#08070bcc}
+.preview-shell{min-height:min(760px,90vh);display:grid;grid-template-rows:auto 1fr auto}
+.preview-top,.preview-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 22px;border-bottom:1px solid #ffffff18}
+.preview-top .close{float:none;color:#fff}
+.preview-controls{justify-content:center;border-top:1px solid #ffffff18;border-bottom:0}
+.preview-controls button{width:auto}
+#previewStage{display:grid;place-items:center;padding:28px;overflow:auto}
+.preview-empty{text-align:center}.preview-empty b{font-size:70px;color:var(--lime)}
+.preview-dialog .answer{color:#fff}.preview-dialog .answer.yellow,.preview-dialog .answer.green{color:#15141b}
+@media(max-width:750px){.page-head{gap:18px;flex-wrap:wrap}.page-head>.actions{width:100%;flex-wrap:wrap}.preview-dialog{width:100vw;max-height:100vh}.preview-shell{min-height:100vh}.preview-top,.preview-controls{padding:12px}.preview-controls button{padding:10px 12px}#previewStage{padding:18px}}
