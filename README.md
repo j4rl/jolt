@@ -11,7 +11,11 @@ Jolt är en plattform för interaktiva livefrågor, byggd med PHP, MySQLi och re
 - Starta en liveomgång och dela en tydlig deltagarlänk tillsammans med en sexsiffrig kod.
 - Låt deltagarna välja namn och avatar.
 - Visa topp fem efter varje fråga med placeringsförändringar, exempelvis ny etta, ny tvåa eller tappad förstaplats.
+- Godkänn ett av flera rätta alternativ och låt deltagaren ändra sitt svar tills frågan stängs.
+- Markera facit när tiden gått ut och visa topp fem manuellt eller under en förinställd tid.
 - Avsluta med en animerad prispall och fullständig slutställning.
+- Starta en Jolt som **Walking Jolt** med QR-låsta stationer, mobilfrågor, valfri ordning och gemensam inlämning.
+- Skriv ut en startsida och en stationsskylt med unik QR-kod för varje fråga.
 - Välj mellan ljust, mörkt och systemstyrt tema.
 - Spela valfri musikslinga medan deltagarna Joltar.
 
@@ -74,6 +78,14 @@ Poängen för ett korrekt svar består av:
 - Upp till 15 % bonus för svarsplacering i förhållande till antalet deltagare.
 
 Fel svar ger noll poäng. Efter varje fråga jämförs ställningen före och efter frågan för att visa deltagarnas placeringsförändringar.
+
+I Walking Jolt används frågans fasta maxpoäng utan tids- eller placeringsbonus. Deltagaren kan ändra upplåsta svar fram till inlämning. Facit och resultat visas när arrangören stänger promenaden.
+
+## Walking Jolt
+
+Välj **Walking** vid en sparad Jolt. Arrangörsvyn visar en deltagarkod och skapar utskriftsvänliga QR-skyltar. Stationslänkarna innehåller en kryptografiskt signerad kod; en fråga kan därför inte låsas upp genom att bara gissa stationsnumret. Efter en godkänd skanning tas koden bort från adressfältet och upplåsningen sparas för deltagaren.
+
+Live Jolt visar också en QR-kod i lobbyn. Den leder direkt till den konfigurerade deltagaradressen med rätt Jolt-kod ifylld.
 
 ## Ljud
 

@@ -1,45 +1,71 @@
 CREATE DATABASE IF NOT EXISTS jolt CHARACTER SET utf8mb4 COLLATE utf8mb4_swedish_ci;
 USE jolt;
 
-CREATE TABLE users (
+CREATE TABLE jolt_users (
  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, name VARCHAR(80) NOT NULL,
  email VARCHAR(190) NOT NULL UNIQUE, password_hash VARCHAR(255) NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
-CREATE TABLE quizzes (
+CREATE TABLE jolt_quizzes (
  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, user_id INT UNSIGNED NOT NULL, title VARCHAR(140) NOT NULL,
  description VARCHAR(500) NOT NULL DEFAULT '', is_public TINYINT(1) NOT NULL DEFAULT 0,
  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
- FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+ FOREIGN KEY (user_id) REFERENCES jolt_users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
-CREATE TABLE questions (
+CREATE TABLE jolt_questions (
  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, quiz_id INT UNSIGNED NOT NULL, position SMALLINT UNSIGNED NOT NULL,
  text VARCHAR(500) NOT NULL, type ENUM('single','multiple','truefalse') NOT NULL DEFAULT 'single',
  time_limit SMALLINT UNSIGNED NOT NULL DEFAULT 20, points SMALLINT UNSIGNED NOT NULL DEFAULT 1000,
  media_path VARCHAR(255) NULL, media_type ENUM('image','video') NULL,
- FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE, INDEX(quiz_id,position)
+ FOREIGN KEY (quiz_id) REFERENCES jolt_quizzes(id) ON DELETE CASCADE, INDEX(quiz_id,position)
 ) ENGINE=InnoDB;
-CREATE TABLE answers (
+CREATE TABLE jolt_answers (
  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, question_id INT UNSIGNED NOT NULL, text VARCHAR(300) NOT NULL,
  is_correct TINYINT(1) NOT NULL DEFAULT 0, position TINYINT UNSIGNED NOT NULL,
- FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
+ FOREIGN KEY (question_id) REFERENCES jolt_questions(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
-CREATE TABLE games (
+CREATE TABLE jolt_games (
  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, quiz_id INT UNSIGNED NOT NULL, host_user_id INT UNSIGNED NOT NULL,
  code CHAR(6) NOT NULL UNIQUE, status ENUM('lobby','question','results','finished') NOT NULL DEFAULT 'lobby',
  current_question SMALLINT UNSIGNED NOT NULL DEFAULT 0, question_started_at DATETIME(3) NULL,
+ results_started_at DATETIME(3) NULL, leaderboard_time SMALLINT UNSIGNED NULL DEFAULT NULL,
  allow_profiles TINYINT(1) NOT NULL DEFAULT 1, music_theme ENUM('pulse','arcade','focus','none') NOT NULL DEFAULT 'pulse', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
- FOREIGN KEY (quiz_id) REFERENCES quizzes(id), FOREIGN KEY (host_user_id) REFERENCES users(id), INDEX(code,status)
+ FOREIGN KEY (quiz_id) REFERENCES jolt_quizzes(id), FOREIGN KEY (host_user_id) REFERENCES jolt_users(id), INDEX(code,status)
 ) ENGINE=InnoDB;
-CREATE TABLE players (
+CREATE TABLE jolt_players (
  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, game_id INT UNSIGNED NOT NULL, token CHAR(48) NOT NULL UNIQUE,
  name VARCHAR(40) NOT NULL, avatar VARCHAR(12) NOT NULL DEFAULT '⚡', score INT UNSIGNED NOT NULL DEFAULT 0,
- joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE,
+ joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (game_id) REFERENCES jolt_games(id) ON DELETE CASCADE,
  UNIQUE(game_id,name)
 ) ENGINE=InnoDB;
-CREATE TABLE responses (
+CREATE TABLE jolt_responses (
  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, game_id INT UNSIGNED NOT NULL, player_id INT UNSIGNED NOT NULL,
  question_id INT UNSIGNED NOT NULL, answer_ids VARCHAR(255) NOT NULL, is_correct TINYINT(1) NOT NULL,
  response_ms INT UNSIGNED NOT NULL, points_awarded INT UNSIGNED NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
- UNIQUE(player_id,question_id), FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE,
- FOREIGN KEY (player_id) REFERENCES players(id) ON DELETE CASCADE, FOREIGN KEY (question_id) REFERENCES questions(id)
+ UNIQUE(player_id,question_id), FOREIGN KEY (game_id) REFERENCES jolt_games(id) ON DELETE CASCADE,
+ FOREIGN KEY (player_id) REFERENCES jolt_players(id) ON DELETE CASCADE, FOREIGN KEY (question_id) REFERENCES jolt_questions(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE jolt_walking_jolts (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, quiz_id INT UNSIGNED NOT NULL, host_user_id INT UNSIGNED NOT NULL,
+ code CHAR(6) NOT NULL UNIQUE, scan_secret CHAR(64) NOT NULL, status ENUM('open','closed') NOT NULL DEFAULT 'open',
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, closed_at DATETIME NULL,
+ FOREIGN KEY (quiz_id) REFERENCES jolt_quizzes(id), FOREIGN KEY (host_user_id) REFERENCES jolt_users(id), INDEX(code,status)
+) ENGINE=InnoDB;
+CREATE TABLE jolt_walking_players (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, walking_jolt_id INT UNSIGNED NOT NULL, token CHAR(48) NOT NULL UNIQUE,
+ name VARCHAR(40) NOT NULL, avatar VARCHAR(12) NOT NULL DEFAULT '⚡', score INT UNSIGNED NOT NULL DEFAULT 0,
+ submitted_at DATETIME NULL, joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ FOREIGN KEY (walking_jolt_id) REFERENCES jolt_walking_jolts(id) ON DELETE CASCADE, UNIQUE(walking_jolt_id,name)
+) ENGINE=InnoDB;
+CREATE TABLE jolt_walking_unlocks (
+ player_id INT UNSIGNED NOT NULL, question_id INT UNSIGNED NOT NULL, unlocked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY(player_id,question_id), FOREIGN KEY (player_id) REFERENCES jolt_walking_players(id) ON DELETE CASCADE,
+ FOREIGN KEY (question_id) REFERENCES jolt_questions(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+CREATE TABLE jolt_walking_responses (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, player_id INT UNSIGNED NOT NULL, question_id INT UNSIGNED NOT NULL,
+ answer_id INT UNSIGNED NOT NULL, is_correct TINYINT(1) NOT NULL, points_awarded INT UNSIGNED NOT NULL,
+ updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, UNIQUE(player_id,question_id),
+ FOREIGN KEY (player_id) REFERENCES jolt_walking_players(id) ON DELETE CASCADE,
+ FOREIGN KEY (question_id) REFERENCES jolt_questions(id) ON DELETE CASCADE, FOREIGN KEY (answer_id) REFERENCES jolt_answers(id)
 ) ENGINE=InnoDB;

@@ -39,7 +39,7 @@ function json_response(array $data, int $status = 200): never {
 }
 function body(): array { return json_decode(file_get_contents('php://input'), true) ?: []; }
 function game_code(): string {
-    do { $code = (string)random_int(100000, 999999); $s = db()->prepare('SELECT id FROM games WHERE code=?'); $s->bind_param('s',$code); $s->execute(); }
+    do { $code = (string)random_int(100000, 999999); $s = db()->prepare('SELECT id FROM jolt_games WHERE code=?'); $s->bind_param('s',$code); $s->execute(); }
     while ($s->get_result()->num_rows); return $code;
 }
 function media_url(?string $path): string { return $path ? e($path) : ''; }

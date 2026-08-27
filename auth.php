@@ -7,9 +7,9 @@ if($_SERVER['REQUEST_METHOD']==='POST') {
  try {
   if($mode==='register') {
    $name=trim($_POST['name']??''); if(strlen($name)<2 || !filter_var($email,FILTER_VALIDATE_EMAIL) || strlen($password)<8) throw new RuntimeException('Kontrollera namn, e-post och lösenord (minst 8 tecken).');
-   $hash=password_hash($password,PASSWORD_DEFAULT); $s=db()->prepare('INSERT INTO users(name,email,password_hash) VALUES(?,?,?)'); $s->bind_param('sss',$name,$email,$hash); $s->execute(); $_SESSION['user_id']=$s->insert_id;
+   $hash=password_hash($password,PASSWORD_DEFAULT); $s=db()->prepare('INSERT INTO jolt_users(name,email,password_hash) VALUES(?,?,?)'); $s->bind_param('sss',$name,$email,$hash); $s->execute(); $_SESSION['user_id']=$s->insert_id;
   } else {
-   $s=db()->prepare('SELECT id,password_hash FROM users WHERE email=?'); $s->bind_param('s',$email); $s->execute(); $u=$s->get_result()->fetch_assoc();
+   $s=db()->prepare('SELECT id,password_hash FROM jolt_users WHERE email=?'); $s->bind_param('s',$email); $s->execute(); $u=$s->get_result()->fetch_assoc();
    if(!$u || !password_verify($password,$u['password_hash'])) throw new RuntimeException('Fel e-postadress eller lösenord.'); $_SESSION['user_id']=(int)$u['id'];
   }
   session_regenerate_id(true); redirect('dashboard.php');
