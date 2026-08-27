@@ -57,6 +57,17 @@ const STUDIO_URL = 'https://jolter.dindomän.se';
 
 Deltagarvyn använder `index.php`, `play.php` och `game.php`. Inloggning, redigering och värdvyn ligger i Jolter.
 
+## En enda subdomän
+
+Det enklaste produktionsupplägget är att lägga hela applikationen i en enda katalog och använda samma adress för deltagarvy och studio:
+
+```php
+const PLAY_URL = 'https://jolt.dindomän.se';
+const STUDIO_URL = 'https://jolt.dindomän.se';
+```
+
+Om webbhotellet använder en undermapp kan båda i stället vara exempelvis `https://dindomän.se/jolt`. Besökare går med på huvudsidan medan den diskreta länken **Jolt Studio** leder skaparen till inloggning eller den egna studion. Alla uppladdningar ligger då i samma `uploads`-katalog och behöver inte synkroniseras.
+
 ## Media och tema
 
 Följande uppladdningsformat stöds:
