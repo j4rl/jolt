@@ -1,0 +1,2 @@
+USE jolt;
+ALTER TABLE jolt_games ADD COLUMN name VARCHAR(140) NULL AFTER status;

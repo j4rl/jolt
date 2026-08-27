@@ -16,6 +16,7 @@ CREATE TABLE jolt_questions (
  text VARCHAR(500) NOT NULL, type ENUM('single','multiple','truefalse') NOT NULL DEFAULT 'single',
  time_limit SMALLINT UNSIGNED NOT NULL DEFAULT 20, points SMALLINT UNSIGNED NOT NULL DEFAULT 1000,
  media_path VARCHAR(255) NULL, media_type ENUM('image','video') NULL,
+ media_credit VARCHAR(1000) NULL, media_source_url VARCHAR(1000) NULL,
  FOREIGN KEY (quiz_id) REFERENCES jolt_quizzes(id) ON DELETE CASCADE, INDEX(quiz_id,position)
 ) ENGINE=InnoDB;
 CREATE TABLE jolt_answers (
@@ -26,6 +27,7 @@ CREATE TABLE jolt_answers (
 CREATE TABLE jolt_games (
  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, quiz_id INT UNSIGNED NOT NULL, host_user_id INT UNSIGNED NOT NULL,
  code CHAR(6) NOT NULL UNIQUE, status ENUM('lobby','question','results','finished') NOT NULL DEFAULT 'lobby',
+ name VARCHAR(140) NULL,
  current_question SMALLINT UNSIGNED NOT NULL DEFAULT 0, question_started_at DATETIME(3) NULL,
  results_started_at DATETIME(3) NULL, leaderboard_time SMALLINT UNSIGNED NULL DEFAULT NULL,
  allow_profiles TINYINT(1) NOT NULL DEFAULT 1, music_theme ENUM('pulse','arcade','focus','none') NOT NULL DEFAULT 'pulse', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -36,6 +38,14 @@ CREATE TABLE jolt_players (
  name VARCHAR(40) NOT NULL, avatar VARCHAR(12) NOT NULL DEFAULT '⚡', score INT UNSIGNED NOT NULL DEFAULT 0,
  joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (game_id) REFERENCES jolt_games(id) ON DELETE CASCADE,
  UNIQUE(game_id,name)
+) ENGINE=InnoDB;
+CREATE TABLE jolt_game_questions (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, game_id INT UNSIGNED NOT NULL,
+ question_id INT UNSIGNED NULL, position SMALLINT UNSIGNED NOT NULL,
+ text VARCHAR(500) NOT NULL, max_points SMALLINT UNSIGNED NOT NULL,
+ FOREIGN KEY (game_id) REFERENCES jolt_games(id) ON DELETE CASCADE,
+ FOREIGN KEY (question_id) REFERENCES jolt_questions(id) ON DELETE SET NULL,
+ UNIQUE(game_id,position), INDEX(game_id,question_id)
 ) ENGINE=InnoDB;
 CREATE TABLE jolt_responses (
  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, game_id INT UNSIGNED NOT NULL, player_id INT UNSIGNED NOT NULL,

@@ -31,7 +31,7 @@ if ($g['status'] === 'question' || $g['status'] === 'results') {
         $answers = db()->query('SELECT id,text'.($g['status'] === 'results' ? ',is_correct' : '').' FROM jolt_answers WHERE question_id='.(int)$q['id'].' ORDER BY position')->fetch_all(MYSQLI_ASSOC);
         $elapsed = $g['question_started_at'] ? (int)((microtime(true) - strtotime($g['question_started_at'])) * 1000) : 0;
         $count = (int)db()->query('SELECT COUNT(*) c FROM jolt_responses WHERE game_id='.$gameId.' AND question_id='.(int)$q['id'])->fetch_assoc()['c'];
-        $data['question'] = ['id' => $q['id'], 'text' => $q['text'], 'type' => $q['type'], 'time' => (int)$q['time_limit'], 'media_path' => $q['media_path'], 'media_type' => $q['media_type'], 'answers' => $answers, 'elapsed_ms' => max(0, $elapsed), 'responses' => $count];
+        $data['question'] = ['id' => $q['id'], 'text' => $q['text'], 'type' => $q['type'], 'time' => (int)$q['time_limit'], 'media_path' => $q['media_path'], 'media_type' => $q['media_type'], 'media_credit' => $q['media_credit'], 'media_source_url' => $q['media_source_url'], 'answers' => $answers, 'elapsed_ms' => max(0, $elapsed), 'responses' => $count];
 
         if ($g['status'] === 'results') {
             $points = [];
